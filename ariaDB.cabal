@@ -8,8 +8,8 @@ synopsis:            Datastore for Haskell Types
 homepage:            github.com/proneetv/ariaDB
 license:             BSD3
 license-file:        LICENSE
-author:              Proneet Verma
-maintainer:          proneet11@gmail.com
+author:              Abhilash Kumar, Proneet Verma, Saurav Kumar
+maintainer:          abhi.iitk16@gmail.com, proneet11@gmail.com, 2020saurav@gmail.com
 -- copyright:           
 category:            Database
 build-type:          Simple
