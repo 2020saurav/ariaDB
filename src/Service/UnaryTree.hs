@@ -6,10 +6,10 @@
 
 module UnaryTree where -- TODO write exports
 
-import Aria
+import           Aria
 import qualified Data.ByteString.Char8 as B
 
-type UTree = [AriaKV]
+type UTree       = [AriaKV]
 type TempAriaKey = Char
 
 dbFileName :: FilePath
