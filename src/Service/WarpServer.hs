@@ -8,6 +8,9 @@ import           Network.Wai.Handler.Warp (run)
 import           Network.HTTP.Types (status200, status404)
 import           Network.HTTP.Types.Header (hContentType)
 
+textToAriaValue = BS.fromStrict
+textToAriaKey   = encodeUtf8 . T.fromStrict
+
 app :: Application
 app req respond =
     do
@@ -15,28 +18,23 @@ app req respond =
         respond $
             case requestMethod req of
                 "GET" -> case pathInfo req of
-                    [key] -> getValue key
+                    [key] -> handleGetRequest (textToAriaKey key)
                     _ -> notFound
                 "POST" -> case pathInfo req of
-                    [key] -> saveValue key reqBody
+                    [key] -> handlePostRequest (textToAriaKey key) (textToAriaValue reqBody)
                     _ -> notFound
                 "DELETE" -> case pathInfo req of
-                    [key] -> deleteValue key
+                    [key] -> handleDeleteRequest (textToAriaKey key)
                     _ -> notFound
 
-getValue key = responseLBS status200 [] value
-    where value = encodeUtf8 . T.fromStrict $ key
+handleGetRequest key        = responseLBS status200 [] $ getValue key
+handlePostRequest key value = responseLBS status200 [] $ saveValue key value
+handleDeleteRequest key     = responseLBS status200 [] $ deleteValue key
+notFound                    = responseLBS status404 [] $ ""
 
-saveValue key reqBody = responseLBS status200 [] k
-    where
-        k = encodeUtf8 . T.fromStrict $ key
-        value = BS.fromStrict reqBody
-
-deleteValue key = responseLBS status200 [] k
-    where
-        k = encodeUtf8 . T.fromStrict $ key
-
-notFound = responseLBS status404 [] ""
+getValue key        = key
+saveValue key value = key
+deleteValue key     = key
 
 main = do
     let port = 3000
