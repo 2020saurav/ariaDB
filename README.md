@@ -4,7 +4,7 @@ Datastore for Haskell Types
 
 ### Build, Run, Test
 To run AriaDB service (from project root):
-```
+```shell
 cabal run
 ```
 To test:
@@ -12,9 +12,9 @@ To test:
 - For the first time, when testdb is empty, put "[]" (without quotes) in it [temporary hack]
 - Run the AriaDB service
 - cd src/Test
-- ```
-runhaskell -i../Library  GetPut.hs
-```
+-   ```shell
+        runhaskell -i../Library  GetPut.hs
+    ```
 
 ### TODO
 - Replace UnaryTree (basically, a list with FileIO) with BPlusTree
