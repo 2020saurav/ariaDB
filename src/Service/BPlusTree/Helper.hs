@@ -15,13 +15,13 @@ data MetaData = MetaData {
 } deriving (Show, Read)
 
 isLeaf :: BPTFileName -> Bool
-isLeaf (x:xs) = if x=='L' then True else False
+isLeaf (x:xs) = x=='L'
 
 getNewLeafName :: IO String
 getNewLeafName = do
     content <- B.readFile mdf
     let metadata = read (B.unpack content) :: MetaData
-    let newLeafName = "L" ++ (show $ 1 + leafCount metadata)
+    let newLeafName = "L" ++ show (1 + leafCount metadata)
     let newMetaData = MetaData (1 + leafCount metadata) (nodeCount metadata) (root metadata)
     B.writeFile mdf . B.pack . show $ newMetaData
     return newLeafName
@@ -30,7 +30,7 @@ getNewNodeName :: IO String
 getNewNodeName = do
     content <- B.readFile mdf
     let metadata = read (B.unpack content) :: MetaData
-    let newNodeName = "N" ++ (show $ 1 + nodeCount metadata)
+    let newNodeName = "N" ++ show (1 + nodeCount metadata)
     let newMetaData = MetaData (leafCount metadata) (1 + nodeCount metadata) (root metadata)
     B.writeFile mdf . B.pack . show $ newMetaData
     return newNodeName
@@ -62,31 +62,30 @@ createNewRoot key child1 child2 = do
     return nodeName
 
 updateParent :: BPTFileName -> BPTFileName -> IO ()
-updateParent parentName fileName = do
-    if isLeaf fileName then do
-        leaf <- L.readLeaf fileName
-        let newLeaf = L.Leaf {
-            L.keyCount = L.keyCount leaf,
-            L.keys     = L.keys leaf,
-            L.values   = L.values leaf,
-            L.parent   = Just parentName,
-            L.left     = L.left leaf,
-            L.right    = L.right leaf
-        }
-        L.writeLeaf fileName newLeaf
-    else do
-        node <- N.readNode fileName
-        let newNode = N.Node {
-            N.keyCount = N.keyCount node,
-            N.keys     = N.keys node,
-            N.values   = N.values node,
-            N.parent   = Just parentName
-        }
-        N.writeNode fileName newNode
+updateParent parentName fileName = if isLeaf fileName then do
+    leaf <- L.readLeaf fileName
+    let newLeaf = L.Leaf {
+        L.keyCount = L.keyCount leaf,
+        L.keys     = L.keys leaf,
+        L.values   = L.values leaf,
+        L.parent   = Just parentName,
+        L.left     = L.left leaf,
+        L.right    = L.right leaf
+    }
+    L.writeLeaf fileName newLeaf
+else do
+    node <- N.readNode fileName
+    let newNode = N.Node {
+        N.keyCount = N.keyCount node,
+        N.keys     = N.keys node,
+        N.values   = N.values node,
+        N.parent   = Just parentName
+    }
+    N.writeNode fileName newNode
 
 updateRootName :: BPTFileName -> IO ()
 updateRootName newRoot = do
     content <- B.readFile mdf
     let metadata = read (B.unpack content) :: MetaData
-    let newMetaData = MetaData (leafCount metadata) (nodeCount metadata) (newRoot)
+    let newMetaData = MetaData (leafCount metadata) (nodeCount metadata) newRoot
     B.writeFile mdf . B.pack . show $ newMetaData

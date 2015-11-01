@@ -5,6 +5,7 @@ import           BPlusTree.Helper as H
 import qualified BPlusTree.Leaf as L
 import qualified BPlusTree.Node as N
 import           BPlusTree.Types
+import           Control.Monad
 import           Data.List as DL
 
 m = 6 -- experiment with this and fix this value in this file
@@ -22,9 +23,7 @@ upsertInLeaf leafName kv = do
         L.right    = L.right leaf
     }
     L.writeLeaf leafName newLeaf
-    if L.keyCount newLeaf == m then
-        splitLeaf leafName
-        else return ()
+    when (L.keyCount newLeaf == m) $ splitLeaf leafName
 
 insertInNode :: BPTFileName -> AriaKey -> BPTFileName -> IO ()
 insertInNode nodeName key subTree = do
@@ -37,9 +36,7 @@ insertInNode nodeName key subTree = do
         N.parent   = N.parent node
     }
     N.writeNode nodeName newNode
-    if N.keyCount newNode == m then
-        splitNode nodeName
-        else return ()
+    when (N.keyCount newNode == m) $ splitNode nodeName
 
 splitLeaf :: BPTFileName -> IO ()
 splitLeaf leafName = do
@@ -69,7 +66,7 @@ splitLeaf leafName = do
         Nothing -> return ()
         Just r  -> H.updateLeftPtr r newLeafName
 
-    let midKey = (L.keys leaf) !! (m `quot` 2)
+    let midKey = L.keys leaf !! (m `quot` 2)
     case L.parent leaf of
         Nothing -> do               -- no parent => this is root
             rootName <- H.createNewRoot midKey leafName newLeafName
@@ -101,7 +98,7 @@ splitNode nodeName = do
     N.writeNode newNodeName node2
     -- TODO : Worried about laziness here! This monadic value may not act at all (?)
     return $ map (H.updateParent newNodeName) (N.values node2)
-    let midKey = (N.keys node) !! (m `quot` 2)
+    let midKey = N.keys node !! (m `quot` 2)
     case N.parent node of
         Nothing -> do
             rootName <- H.createNewRoot midKey nodeName newNodeName
