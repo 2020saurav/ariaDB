@@ -1,8 +1,8 @@
 module AriaDB where
 -- export get, put and delete
 
-import Network.HTTP
-import Types
+import           Network.HTTP
+import           Types
 
 hostURL :: String
 hostURL = "http://localhost:3000/"

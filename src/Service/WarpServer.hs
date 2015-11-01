@@ -38,8 +38,3 @@ main = do
     let port = 3000
     putStrLn $ "Listening on port " ++ show port
     run port app
-
--- Testing
--- GET : curl http://localhost:3000/102
--- POST : curl -X POST --data "Piyush" http://localhost:3000/103
--- DELETE : will see how to handle these directly in B+ Tree index.
