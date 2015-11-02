@@ -115,3 +115,33 @@ splitNode nodeName = do
             H.updateParent rootName nodeName
             H.updateParent rootName newNodeName
         Just parent -> insertInNode parent midKey newNodeName
+
+findLeaf :: AriaKey -> IO BPTFileName
+findLeaf key = do
+    rootName <- H.getRootName
+    findLeafAux key rootName
+
+findLeafAux :: AriaKey -> BPTFileName -> IO BPTFileName
+findLeafAux key current = do
+    if H.isLeaf current then return current
+    else do
+        node <- N.readNode current
+        let index = H.findPosition (N.keys node) key
+        if (length (N.keys node) > index) && (N.keys node !! index) == key then
+            findLeafAux key (N.values node !! (index+1))
+        else findLeafAux key (N.values node !! index)
+
+upsert :: AriaKV -> IO ()
+upsert kv = do
+    leafName <- findLeaf $ ariaKey kv
+    upsertInLeaf leafName kv
+
+get :: AriaKey -> IO (Maybe AriaValue)
+get key = do
+    leafName <- findLeaf key
+    leaf <- L.readLeaf leafName
+    let index = H.findPosition (L.keys leaf) key
+    if index >= (L.keyCount leaf) then return Nothing
+    else if (L.keys leaf !! index) == key then
+        return (L.values leaf !! index)
+        else return Nothing

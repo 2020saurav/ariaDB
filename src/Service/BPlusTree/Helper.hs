@@ -104,3 +104,9 @@ updateRootName newRoot = do
     let metadata = read (B.unpack content) :: MetaData
     let newMetaData = MetaData (leafCount metadata) (nodeCount metadata) newRoot
     B.writeFile mdf . B.pack . show $ newMetaData
+
+getRootName :: IO BPTFileName
+getRootName = do
+    content <- B.readFile mdf
+    let metadata = read (B.unpack content) :: MetaData
+    return (root metadata)
