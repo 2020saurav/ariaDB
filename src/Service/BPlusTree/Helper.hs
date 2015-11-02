@@ -17,6 +17,21 @@ data MetaData = MetaData {
 isLeaf :: BPTFileName -> Bool
 isLeaf (x:xs) = x=='L'
 
+findPosition :: [AriaKey] -> AriaKey -> Int
+findPosition keys key = findPositionAux keys key 0
+
+findPositionAux :: [AriaKey] -> AriaKey -> Int -> Int
+findPositionAux keys key index = case keys of
+    x:xs -> if x >= key then index
+            else findPositionAux xs key index + 1
+    _    -> index
+
+insertAt :: Int -> a -> [a] -> [a]
+insertAt index x xs = (take index xs) ++ [x] ++ (drop index xs)
+
+updateAt :: Int -> a -> [a] -> [a]
+updateAt index x xs = (take index xs) ++ [x] ++ (drop (index+1) xs)
+
 getNewLeafName :: IO String
 getNewLeafName = do
     content <- B.readFile mdf

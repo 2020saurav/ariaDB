@@ -13,26 +13,37 @@ m = 6 -- experiment with this and fix this value in this file
 upsertInLeaf :: BPTFileName -> AriaKV -> IO ()
 upsertInLeaf leafName kv = do
     leaf <- L.readLeaf leafName
-    -- TODO find correct position and upsert the value
-    let newLeaf = L.Leaf {
-        L.keyCount = L.keyCount leaf + 1,
-        L.keys     = L.keys leaf ++ [ariaKey kv],
-        L.values   = L.values leaf ++ [Just $ ariaValue kv],
-        L.parent   = L.parent leaf,
-        L.left     = L.left leaf,
-        L.right    = L.right leaf
-    }
-    L.writeLeaf leafName newLeaf
-    when (L.keyCount newLeaf == m) $ splitLeaf leafName
+    let index = H.findPosition (L.keys leaf) (ariaKey kv)
+    if (L.keyCount leaf > index) && (L.keys leaf !! index) == ariaKey kv then do -- update
+        let newLeaf = L.Leaf {
+            L.keyCount = L.keyCount leaf,
+            L.keys     = H.updateAt index (ariaKey kv) (L.keys leaf),
+            L.values   = H.updateAt index (Just $ ariaValue kv) (L.values leaf),
+            L.parent   = L.parent leaf,
+            L.left     = L.left leaf,
+            L.right    = L.right leaf
+        }
+        L.writeLeaf leafName newLeaf
+    else do -- insert
+        let newLeaf = L.Leaf {
+            L.keyCount = L.keyCount leaf + 1,
+            L.keys     = H.insertAt index (ariaKey kv) (L.keys leaf),
+            L.values   = H.insertAt index (Just $ ariaValue kv) (L.values leaf),
+            L.parent   = L.parent leaf,
+            L.left     = L.left leaf,
+            L.right    = L.right leaf
+        }
+        L.writeLeaf leafName newLeaf
+        when (L.keyCount newLeaf == m) $ splitLeaf leafName
 
 insertInNode :: BPTFileName -> AriaKey -> BPTFileName -> IO ()
 insertInNode nodeName key subTree = do
     node <- N.readNode nodeName
-    -- TODO add key and subTree in correct position
+    let index = H.findPosition (N.keys node) key
     let newNode = N.Node {
         N.keyCount = N.keyCount node + 1,
-        N.keys     = N.keys node ++ [key],
-        N.values   = N.values node ++ [subTree],
+        N.keys     = H.insertAt index key (N.keys node),
+        N.values   = H.insertAt (index + 1) subTree (N.values node),
         N.parent   = N.parent node
     }
     N.writeNode nodeName newNode
