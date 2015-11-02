@@ -144,3 +144,20 @@ get key = do
     else if (L.keys leaf !! index) == key then
         return (L.values leaf !! index)
         else return Nothing
+
+remove :: AriaKey -> IO ()
+remove key = do
+    leafName <- findLeaf key
+    leaf <- L.readLeaf leafName
+    let index = H.findPosition (L.keys leaf) key
+    if (L.keyCount leaf > index) && (L.keys leaf !! index) == key then do -- exists
+        let newLeaf = L.Leaf {
+            L.keyCount = L.keyCount leaf,
+            L.keys     = L.keys leaf,
+            L.values   = H.updateAt index (Nothing) (L.values leaf),
+            L.parent   = L.parent leaf,
+            L.left     = L.left leaf,
+            L.right    = L.right leaf
+        }
+        L.writeLeaf leafName newLeaf
+    else return () -- key doesn't exist
