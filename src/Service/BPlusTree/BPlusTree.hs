@@ -96,8 +96,7 @@ splitNode nodeName = do
     }
     N.writeNode nodeName    node1
     N.writeNode newNodeName node2
-    -- TODO : Worried about laziness here! This monadic value may not act at all (?)
-    return $ map (H.updateParent newNodeName) (N.values node2)
+    mapM (H.updateParent newNodeName) (N.values node2)
     let midKey = N.keys node !! (m `quot` 2)
     case N.parent node of
         Nothing -> do
