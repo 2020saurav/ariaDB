@@ -4,16 +4,16 @@ import           Aria
 import           Data.Text.Lazy.Encoding (encodeUtf8)
 import           Network.Wai (responseLBS, Application, pathInfo, requestMethod, requestBody)
 import           Network.Wai.Handler.Warp (run)
-import           Network.HTTP.Types (status200, status404, status406)
+import           Network.HTTP.Types (status200, status404)
 import           Network.HTTP.Types.Header (hContentType)
-import qualified UnaryTree as UTree
+import qualified BPlusTree.BPlusTree as BPTree
 
 app :: Application
 app req respond =
     case requestMethod req of
         "GET" -> case pathInfo req of
             [key] -> do
-                value <- UTree.find $ textToAriaKey key
+                value <- BPTree.get $ textToAriaKey key
                 case value of
                     Just v  -> respond $ responseLBS status200 [] $ ariaToText v
                     Nothing -> respond notFound
@@ -21,16 +21,14 @@ app req respond =
 
         "POST" -> case pathInfo req of
             [key] -> do
-                reqBody   <- requestBody req
-                insertKey <- UTree.insert (textToAriaKey key) (textToAriaValue reqBody)
-                case insertKey of
-                    Left err -> respond $ responseLBS status406 [] $ ariaToText "Key Exists"
-                    Right k  -> respond $ responseLBS status200 [] $ ariaToText k
-            _ -> respond notFound
+                reqBody <- requestBody req
+                BPTree.upsert $ AriaKV (textToAriaKey key) (textToAriaValue reqBody)
+                respond $ responseLBS status200 [] ""
 
         "DELETE" -> case pathInfo req of
-            [key] -> respond $ responseLBS status200 [] $ ariaToText $ textToAriaKey key
-            _ -> respond notFound
+            [key] -> do
+                BPTree.remove (textToAriaKey key)
+                respond $ responseLBS status200 [] ""
 
 notFound = responseLBS status404 [] "Not Found"
 

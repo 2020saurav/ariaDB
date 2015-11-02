@@ -1,4 +1,4 @@
-module BPlusTree.BPlusTree where
+module BPlusTree.BPlusTree (upsert, get, remove) where
 
 import           Aria
 import           BPlusTree.Helper as H
@@ -154,7 +154,7 @@ remove key = do
         let newLeaf = L.Leaf {
             L.keyCount = L.keyCount leaf,
             L.keys     = L.keys leaf,
-            L.values   = H.updateAt index (Nothing) (L.values leaf),
+            L.values   = H.updateAt index Nothing (L.values leaf),
             L.parent   = L.parent leaf,
             L.left     = L.left leaf,
             L.right    = L.right leaf

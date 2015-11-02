@@ -4,6 +4,8 @@ import           Aria
 import           BPlusTree.Types
 import qualified Data.ByteString.Char8 as B
 
+dataPath="data/"
+
 data Leaf = Leaf {
     keyCount :: Int,
     keys     :: [AriaKey],
@@ -15,9 +17,9 @@ data Leaf = Leaf {
 
 readLeaf :: BPTFileName -> IO Leaf
 readLeaf leafName = do
-    fileContents <- B.readFile leafName
+    fileContents <- B.readFile (dataPath ++ leafName)
     let leaf = read (B.unpack fileContents) :: Leaf
     return leaf
 
 writeLeaf :: BPTFileName -> Leaf -> IO ()
-writeLeaf leafName = B.writeFile leafName . B.pack . show
+writeLeaf leafName = B.writeFile (dataPath ++ leafName) . B.pack . show

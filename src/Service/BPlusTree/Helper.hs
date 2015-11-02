@@ -6,7 +6,7 @@ import qualified Data.ByteString.Char8 as B
 import qualified BPlusTree.Leaf as L
 import qualified BPlusTree.Node as N
 
-mdf = "BPlusTree/metadata"
+mdf = "data/metadata"
 
 data MetaData = MetaData {
     leafCount :: Int,
