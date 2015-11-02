@@ -27,10 +27,10 @@ findPositionAux keys key index = case keys of
     _    -> index
 
 insertAt :: Int -> a -> [a] -> [a]
-insertAt index x xs = (take index xs) ++ [x] ++ (drop index xs)
+insertAt index x xs = take index xs ++ [x] ++ drop index xs
 
 updateAt :: Int -> a -> [a] -> [a]
-updateAt index x xs = (take index xs) ++ [x] ++ (drop (index+1) xs)
+updateAt index x xs = take index xs ++ [x] ++ drop (index+1) xs
 
 getNewLeafName :: IO String
 getNewLeafName = do

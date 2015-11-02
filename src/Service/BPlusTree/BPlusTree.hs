@@ -107,7 +107,7 @@ splitNode nodeName = do
     }
     N.writeNode nodeName    node1
     N.writeNode newNodeName node2
-    mapM (H.updateParent newNodeName) (N.values node2)
+    mapM_ (H.updateParent newNodeName) (N.values node2)
     let midKey = N.keys node !! (m `quot` 2)
     case N.parent node of
         Nothing -> do
@@ -122,8 +122,7 @@ findLeaf key = do
     findLeafAux key rootName
 
 findLeafAux :: AriaKey -> BPTFileName -> IO BPTFileName
-findLeafAux key current = do
-    if H.isLeaf current then return current
+findLeafAux key current = if H.isLeaf current then return current
     else do
         node <- N.readNode current
         let index = H.findPosition (N.keys node) key
@@ -141,7 +140,7 @@ get key = do
     leafName <- findLeaf key
     leaf <- L.readLeaf leafName
     let index = H.findPosition (L.keys leaf) key
-    if index >= (L.keyCount leaf) then return Nothing
+    if index >= L.keyCount leaf then return Nothing
     else if (L.keys leaf !! index) == key then
         return (L.values leaf !! index)
         else return Nothing

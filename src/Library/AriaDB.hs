@@ -8,15 +8,13 @@ hostURL :: String
 hostURL = "http://localhost:3000/"
 
 get :: (Read a) => AriaKey -> IO a
-get key = do
-    getAux key >>= \x -> return $ read x
+get key = getAux key >>= \x -> return $ read x
 
 getAux :: AriaKey -> IO AriaValue
 getAux key = do
     let req = getRequest $ hostURL++key
     res  <- simpleHTTP req
-    body <- getResponseBody res
-    return body
+    getResponseBody res
 
 put :: (Show a) => AriaKey -> a -> IO ()
 put key value = do
