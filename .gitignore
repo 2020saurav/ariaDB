@@ -1,2 +1,4 @@
 testdb
 dist/
+*.o
+*.hi
