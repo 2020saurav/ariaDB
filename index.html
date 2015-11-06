@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>AriaDB by 2020saurav</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">AriaDB</h1>
+      <h2 class="project-tagline">Key Value Datastore in Haskell</h2>
+      <a href="https://github.com/2020saurav/ariaDB" class="btn">View on GitHub</a>
+      <a href="https://github.com/2020saurav/ariaDB/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/2020saurav/ariaDB/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="ariadb-" class="anchor" href="#ariadb-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ariaDB <a href="https://travis-ci.org/proneetv/ariaDB"><img src="https://travis-ci.org/proneetv/ariaDB.svg?branch=master" alt="Build Status"></a>
+</h1>
+
+<p>ariaDB is a persistent key-value store written in Haskell.</p>
+
+<h3>
+<a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+
+<ul>
+<li>Key-Value store as a service exposing REST API</li>
+<li>Client library (for Haskell) to interact with the API</li>
+<li>Simple interface : <code>get</code>, <code>put</code> and <code>delete</code>
+</li>
+<li>B+ Tree indexing for fast access</li>
+<li>Type Safe (entire code in Haskell)</li>
+<li>Stores object of any type</li>
+<li>Concurrent access to the store (Warp)</li>
+</ul>
+
+<h3>
+<a id="usage-haskell" class="anchor" href="#usage-haskell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (Haskell)</h3>
+
+<div class="highlight highlight-source-haskell"><pre><span class="pl-k">import</span> <span class="pl-c1">AriaDB</span>
+
+<span class="pl-k">data</span> <span class="pl-c1">Person</span> = <span class="pl-c1">Person</span> {
+    <span class="pl-en">firstName</span> <span class="pl-k">::</span> <span class="pl-c1">String</span>,
+    <span class="pl-en">lastName</span>  <span class="pl-k">::</span> <span class="pl-c1">String</span>
+} <span class="pl-k">deriving</span> (<span class="pl-e">Show</span>, <span class="pl-e">Read</span>, <span class="pl-e">Eq</span>)
+
+foo = <span class="pl-c1">Person</span> <span class="pl-s"><span class="pl-pds">"</span>John<span class="pl-pds">"</span></span> <span class="pl-s"><span class="pl-pds">"</span>Doe<span class="pl-pds">"</span></span>
+
+main = <span class="pl-k">do</span>
+    <span class="pl-k">let</span> testKey = <span class="pl-s"><span class="pl-pds">"</span>k1<span class="pl-pds">"</span></span>
+    put testKey foo
+
+    bar &lt;- get testKey
+    <span class="pl-k">case</span> bar <span class="pl-k">of</span>
+        <span class="pl-c1">Just</span> v  -&gt; <span class="pl-c1">print</span> (v::<span class="pl-c1">Person</span>) <span class="pl-c">-- Type Assigned</span>
+        <span class="pl-c1">Nothing</span> -&gt; <span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">"</span>Nothing<span class="pl-pds">"</span></span>
+
+    baz &lt;- get testKey
+    <span class="pl-k">case</span> baz <span class="pl-k">of</span>
+        <span class="pl-c1">Just</span> v  -&gt; <span class="pl-c1">print</span> $ v == foo <span class="pl-c">-- Type Inferred</span>
+        <span class="pl-c1">Nothing</span> -&gt; <span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">"</span>Value not found<span class="pl-pds">"</span></span>
+
+    delete testKey
+    qux &lt;- get testKey
+    <span class="pl-k">case</span> qux <span class="pl-k">of</span>
+        <span class="pl-c1">Just</span> v  -&gt; <span class="pl-c1">print</span> (v::<span class="pl-c1">Person</span>) <span class="pl-c">-- Type Assigned</span>
+        <span class="pl-c1">Nothing</span> -&gt; <span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">"</span>Nothing<span class="pl-pds">"</span></span></pre></div>
+
+<h3>
+<a id="build" class="anchor" href="#build" aria-hidden="true"><span class="octicon octicon-link"></span></a>Build</h3>
+
+<p>To build and run AriaDB service (from project root):</p>
+
+<div class="highlight highlight-source-shell"><pre>  $ cabal run</pre></div>
+
+<h3>
+<a id="test" class="anchor" href="#test" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test</h3>
+
+<div class="highlight highlight-source-shell"><pre>    $ cabal run <span class="pl-k">&amp;</span>
+    $ <span class="pl-c1">cd</span> src/Test
+    $ runhaskell -i../Library GetPutDelete.hs</pre></div>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/2020saurav/ariaDB">AriaDB</a> is maintained by <a href="https://github.com/2020saurav">2020saurav</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
