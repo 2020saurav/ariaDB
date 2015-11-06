@@ -20,6 +20,7 @@ import qualified Data.ByteString.Char8 as B
 dataPath :: FilePath
 dataPath = "data/"
 
+-- | Node data type captures the node object in B+ Tree.
 data Node = Node {
     keyCount :: Int,                -- ^ Number of keys in the node
     keys     :: [AriaKey],          -- ^ List of keys (sorted)

@@ -25,6 +25,8 @@ import qualified BPlusTree.Node as N
 mdf :: FilePath
 mdf = "data/metadata"
 
+-- | MetaData type captures object with information of counts of leaves, nodes
+-- and current root
 data MetaData = MetaData {
     leafCount :: Int,        -- ^ Number of leaves in the B+ Tree
     nodeCount :: Int,        -- ^ Number of nodes in the B+ Tree

@@ -20,6 +20,7 @@ import qualified Data.ByteString.Char8 as B
 dataPath :: FilePath
 dataPath="data/"
 
+-- | Leaf data type captures the leaf object in B+ Tree.
 data Leaf = Leaf {
     keyCount :: Int,                -- ^ Number of keys in the leaf
     keys     :: [AriaKey],          -- ^ List of keys (sorted)
