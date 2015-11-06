@@ -23,7 +23,6 @@ main = do
         Just v  -> print $ v == foo -- Type Inferred
         Nothing -> print "Value not found"
 
-
     delete testKey
     qux <- get testKey
     case qux of
