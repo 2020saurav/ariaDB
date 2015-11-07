@@ -1,5 +1,11 @@
 # ariaDB [![Build Status](https://travis-ci.org/proneetv/ariaDB.svg?branch=master)](https://travis-ci.org/proneetv/ariaDB)
-ariaDB is a persistent key-value store written in Haskell.
+ariaDB is a persistent key-value store written in Haskell. This work is done as a project in [Functional Programming course](http://cse.iitk.ac.in/users/ppk/teaching/Functional-Programming/index.html).
+
+#### Team members
+- [Abhilash Kumar](https://github.com/abhilak) (12014)
+- [Proneet Verma](https://github.com/proneetv) (12520)
+- [Saurav Kumar](https://github.com/2020saurav) (12641)
+
 
 ### Features
 - Key-Value store as a service exposing REST API
