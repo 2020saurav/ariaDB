@@ -22,11 +22,6 @@ import           Network.Wai.Handler.Warp (run)
 import           Network.HTTP.Types (status200, status403, status404)
 import           Network.HTTP.Types.Header (hContentType)
 
--- | Maximum size of LRU cache. The LRU cache is guaranteed to not grow above
--- the specified number of entries.
-lruCacheSize :: Maybe Integer
-lruCacheSize = Just 10000
-
 -- | It takes an LRU cache and returns a Wai application to handle requests and responses
 app' :: IORef (LRU AriaKey AriaValue) -> Application
 app' lruCache = app where
@@ -63,6 +58,6 @@ forbidden = responseLBS status403 [] "Forbidden"
 -- | A journey of thousand miles must begin with a single step. This is that step
 main = do
     let port = 3000
-    lruCache <- newIORef (newLRU lruCacheSize)
+    lruCache <- newIORef (newLRU Cache.lruCacheSize)
     putStrLn $ "Listening on port " ++ show port
     run port (app' lruCache)

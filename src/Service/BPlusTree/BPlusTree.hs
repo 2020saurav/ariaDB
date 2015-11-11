@@ -12,7 +12,7 @@ This is a disk based implementation of B+ Tree.
 Wikipedia page on <https://en.wikipedia.org/wiki/B%2B_tree>
 -}
 
-module BPlusTree.BPlusTree (upsert, get, remove) where
+module BPlusTree.BPlusTree (upsert, get, remove, findLeaf) where
 
 import           Aria
 import           BPlusTree.Helper as H
