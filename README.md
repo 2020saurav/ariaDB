@@ -12,7 +12,8 @@ ariaDB is a persistent key-value store written in Haskell. This work is done as 
 - Client library (for Haskell) to interact with the API
 - Simple interface : `get`, `put` and `delete`
 - B+ Tree indexing for fast access
-- Type Safe (entire code in Haskell)
+- Caching layer to enhance look up of frequently accessed Key-Value pairs
+- Type Safety (entire code in Haskell)
 - Stores object of any type
 - Concurrent access to the store (Warp)
 
