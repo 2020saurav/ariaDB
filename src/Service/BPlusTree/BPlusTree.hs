@@ -27,9 +27,8 @@ import           Data.List as DL
 -- this maximum number is reached. In a strictly efficient implementation,
 -- 'm' is set such that the number of bytes in a file a multiple of hard-disk
 -- page size, otherwise the file is appended with garbage to make it so.
--- For experimental purposes, I am using m = 16, as it empirically gave better
--- read/write time (for 5000 keys)
-m = 16
+-- For experimental purposes, I am using m = 64, generally 40-100 is preferred
+m = 64
 
 -- | 'upsertInLeaf' is an auxilliary function to upsert a key-value pair in a
 -- given file. The function finds the right position to insert the key, and if

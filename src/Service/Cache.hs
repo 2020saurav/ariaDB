@@ -41,6 +41,10 @@ get lruCache key = do
             val' <- BPTree.get key
             case val' of
                 Just v -> do
+                    -- point caching: for random repeated reads
+                    -- let newCache = LRU.insert key v cacheValue
+                    -- writeIORef lruCache newCache
+                    -- bulk load: put whole leaf in cache: for seq reads
                     leafName <- BPTree.findLeaf key
                     bulkload lruCache leafName
                     return (Just v)
