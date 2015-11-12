@@ -17,6 +17,9 @@ ariaDB is a persistent key-value store written in Haskell. This work is done as 
 - Stores object of any type
 - Concurrent access to the store (Warp)
 
+### Performance
+![Read Write Performance](https://raw.githubusercontent.com/2020saurav/ariaDB/master/poster/figures/rw.png)
+
 ### Usage (Haskell)
 ```haskell
 import AriaDB
@@ -61,3 +64,10 @@ To build and run AriaDB service (from project root):
 	$ cd src/Test
 	$ runhaskell -i../Library GetPutDelete.hs
 ```
+### Benchmarking
+In order to benchmark, comment the non-relevant parts in src/Test/Benchmark.hs
+```shell
+    $ ghc -O3 --make -isrc/Service src/Test/Benchmark.hs
+    $ ./src/Test/Benchmark
+```
+
