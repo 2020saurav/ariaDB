@@ -23,7 +23,7 @@
 <a id="ariadb-" class="anchor" href="#ariadb-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ariaDB <a href="https://travis-ci.org/proneetv/ariaDB"><img src="https://travis-ci.org/proneetv/ariaDB.svg?branch=master" alt="Build Status"></a>
 </h1>
 
-<p>ariaDB is a persistent key-value store written in Haskell.</p>
+<p>ariaDB is a persistent key-value store written in Haskell. This work is done as a project in <a href="http://cse.iitk.ac.in/users/ppk/teaching/Functional-Programming/index.html">Functional Programming course</a>.</p>
 
 <h3>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
@@ -34,10 +34,16 @@
 <li>Simple interface : <code>get</code>, <code>put</code> and <code>delete</code>
 </li>
 <li>B+ Tree indexing for fast access</li>
-<li>Type Safe (entire code in Haskell)</li>
+<li>Caching layer to enhance look up of frequently accessed Key-Value pairs</li>
+<li>Type Safety (entire code in Haskell)</li>
 <li>Stores object of any type</li>
 <li>Concurrent access to the store (Warp)</li>
 </ul>
+
+<h3>
+<a id="performance" class="anchor" href="#performance" aria-hidden="true"><span class="octicon octicon-link"></span></a>Performance</h3>
+
+<p><img src="https://raw.githubusercontent.com/2020saurav/ariaDB/master/poster/figures/rw.png" alt="Read Write Performance"></p>
 
 <h3>
 <a id="usage-haskell" class="anchor" href="#usage-haskell" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage (Haskell)</h3>
@@ -84,6 +90,14 @@ main = <span class="pl-k">do</span>
 <div class="highlight highlight-source-shell"><pre>    $ cabal run <span class="pl-k">&amp;</span>
     $ <span class="pl-c1">cd</span> src/Test
     $ runhaskell -i../Library GetPutDelete.hs</pre></div>
+
+<h3>
+<a id="benchmarking" class="anchor" href="#benchmarking" aria-hidden="true"><span class="octicon octicon-link"></span></a>Benchmarking</h3>
+
+<p>In order to benchmark, comment the non-relevant parts in src/Test/Benchmark.hs</p>
+
+<div class="highlight highlight-source-shell"><pre>    $ ghc -O3 --make -isrc/Service src/Test/Benchmark.hs
+    $ ./src/Test/Benchmark</pre></div>
 
       <footer class="site-footer">
         <span class="site-footer-owner"><a href="https://github.com/2020saurav/ariaDB">AriaDB</a> is maintained by <a href="https://github.com/2020saurav">2020saurav</a>.</span>
